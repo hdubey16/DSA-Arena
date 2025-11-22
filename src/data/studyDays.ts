@@ -61,7 +61,7 @@ export const studyDays: StudyDay[] = [
   { day: 39, week: 7, topic: "CRUD Operations", compulsoryQuestion: "Insert, update, delete", difficulty: "Hard" },
 ];
 
-// Helper to generate 4 AI practice questions (Easy → Med → Med → Hard)
+// Helper to generate 5 practice questions (1 main + 4 AI generated: Easy → Med → Med → Hard)
 export const generatePracticeQuestions = (dayData: StudyDay) => {
   const { topic, compulsoryQuestion } = dayData;
   
@@ -70,8 +70,7 @@ export const generatePracticeQuestions = (dayData: StudyDay) => {
       id: `q1-day${dayData.day}`,
       title: compulsoryQuestion,
       difficulty: dayData.difficulty,
-      isCompulsory: true,
-      description: `Compulsory Question for Day ${dayData.day}: ${topic}`,
+      description: `Practice problem for Day ${dayData.day}: ${topic}`,
       examples: [
         { input: "// Write your code here", output: "// Expected output" }
       ],
@@ -86,8 +85,7 @@ export const generatePracticeQuestions = (dayData: StudyDay) => {
       id: `q2-day${dayData.day}`,
       title: `${topic} - Practice 1`,
       difficulty: "Easy",
-      isCompulsory: false,
-      description: `AI-generated easy practice question for ${topic}`,
+      description: `Easy practice question for ${topic}`,
       examples: [
         { input: "Example input", output: "Example output" }
       ],
@@ -101,8 +99,7 @@ export const generatePracticeQuestions = (dayData: StudyDay) => {
       id: `q3-day${dayData.day}`,
       title: `${topic} - Practice 2`,
       difficulty: "Medium",
-      isCompulsory: false,
-      description: `AI-generated medium practice question for ${topic}`,
+      description: `Medium practice question for ${topic}`,
       examples: [
         { input: "Example input", output: "Example output" }
       ],
@@ -116,8 +113,7 @@ export const generatePracticeQuestions = (dayData: StudyDay) => {
       id: `q4-day${dayData.day}`,
       title: `${topic} - Practice 3`,
       difficulty: "Medium",
-      isCompulsory: false,
-      description: `AI-generated medium practice question for ${topic}`,
+      description: `Medium practice question for ${topic}`,
       examples: [
         { input: "Example input", output: "Example output" }
       ],
@@ -131,8 +127,7 @@ export const generatePracticeQuestions = (dayData: StudyDay) => {
       id: `q5-day${dayData.day}`,
       title: `${topic} - Practice 4`,
       difficulty: "Hard",
-      isCompulsory: false,
-      description: `AI-generated hard practice question for ${topic}`,
+      description: `Hard practice question for ${topic}`,
       examples: [
         { input: "Example input", output: "Example output" }
       ],

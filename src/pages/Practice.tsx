@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Play, Send, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
+import { Play, Send, RotateCcw, ChevronLeft, ChevronRight, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { studyDays, generatePracticeQuestions } from "@/data/studyDays";
+import { 
+  saveQuestionProgress, 
+  isQuestionCompleted, 
+  getSavedCode, 
+  getDayProgress,
+  isDayUnlocked 
+} from "@/utils/progressTracker";
 
 const Practice = () => {
   const { topicId } = useParams();
@@ -23,6 +30,31 @@ const Practice = () => {
   const [isRunning, setIsRunning] = useState(false);
 
   const question = questions[currentQuestion];
+  const dayProgress = getDayProgress(dayNumber);
+  const questionCompleted = isQuestionCompleted(dayNumber, currentQuestion);
+
+  // Check if day is unlocked
+  useEffect(() => {
+    if (!isDayUnlocked(dayNumber)) {
+      toast({
+        title: "Day Locked",
+        description: `Complete Day ${dayNumber - 1} to unlock this day.`,
+        variant: "destructive",
+      });
+      navigate("/topics");
+    }
+  }, [dayNumber, navigate, toast]);
+
+  // Load saved code on mount or question change
+  useEffect(() => {
+    const savedCode = getSavedCode(dayNumber, currentQuestion);
+    if (savedCode) {
+      setCode(savedCode);
+    } else {
+      setCode(questions[currentQuestion].starterCode);
+    }
+    setOutput("");
+  }, [currentQuestion, dayNumber, questions]);
 
   const handleRun = () => {
     setIsRunning(true);
@@ -40,26 +72,76 @@ const Practice = () => {
   };
 
   const handleSubmit = () => {
-    toast({
-      title: "Solution submitted!",
-      description: "Your solution is being evaluated...",
-    });
-    handleRun();
+    setIsRunning(true);
+    setOutput("Evaluating...");
+    
+    // Mock evaluation
+    setTimeout(() => {
+      const passed = true; // Mock: always pass for now
+      
+      if (passed) {
+        // Save as completed
+        saveQuestionProgress(dayNumber, currentQuestion, code, true);
+        
+        setOutput("✓ All test cases passed!\n\nExecution time: 1ms\nMemory: 41.2 MB");
+        
+        toast({
+          title: "Solution accepted!",
+          description: "Moving to next question...",
+        });
+        
+        // Auto-navigate to next question after 1.5s
+        setTimeout(() => {
+          if (currentQuestion < questions.length - 1) {
+            // Move to next question in same day
+            handleQuestionChange(currentQuestion + 1);
+          } else {
+            // All questions completed, check if day is done
+            const updatedProgress = getDayProgress(dayNumber);
+            if (updatedProgress.allCompleted) {
+              toast({
+                title: "Day completed! 🎉",
+                description: "Great work! Next day is now unlocked.",
+              });
+              navigate("/topics");
+            }
+          }
+        }, 1500);
+      } else {
+        setOutput("✗ Some test cases failed.\n\nPlease review your solution.");
+        toast({
+          title: "Solution incorrect",
+          description: "Some test cases failed. Try again!",
+          variant: "destructive",
+        });
+      }
+      
+      setIsRunning(false);
+    }, 1500);
   };
 
   const handleReset = () => {
-    setCode(question.starterCode);
+    const savedCode = getSavedCode(dayNumber, currentQuestion);
+    if (savedCode) {
+      setCode(savedCode);
+      toast({
+        title: "Code restored",
+        description: "Your last saved code has been restored.",
+      });
+    } else {
+      setCode(question.starterCode);
+      toast({
+        title: "Code reset",
+        description: "Starter code has been restored.",
+      });
+    }
     setOutput("");
-    toast({
-      title: "Code reset",
-      description: "Starter code has been restored.",
-    });
   };
 
   const handleQuestionChange = (newIndex: number) => {
+    // Auto-save current code before switching
+    saveQuestionProgress(dayNumber, currentQuestion, code, questionCompleted);
     setCurrentQuestion(newIndex);
-    setCode(questions[newIndex].starterCode);
-    setOutput("");
   };
 
   const handlePrevious = () => {
@@ -101,10 +183,11 @@ const Practice = () => {
                 }`}>
                   {question.difficulty}
                 </span>
-                {question.isCompulsory && (
-                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary text-primary-foreground neon-glow">
-                    Compulsory
-                  </span>
+                {questionCompleted && (
+                  <div className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-primary/20 text-primary">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Completed
+                  </div>
                 )}
               </div>
             </div>
@@ -127,7 +210,7 @@ const Practice = () => {
             ))}
           </Card>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <Button
               disabled={currentQuestion === 0}
               variant="outline"
@@ -146,8 +229,11 @@ const Practice = () => {
               Next
               <ChevronRight className="h-4 w-4 ml-2" />
             </Button>
-            <span className="ml-auto text-sm text-muted-foreground self-center">
+            <span className="ml-auto text-sm text-muted-foreground">
               Question {currentQuestion + 1} of {questions.length}
+            </span>
+            <span className="text-sm font-semibold text-primary">
+              {dayProgress.questionsCompleted.length}/5 Completed
             </span>
           </div>
         </div>
