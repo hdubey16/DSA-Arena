@@ -1,40 +1,28 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Play, Send, RotateCcw, ChevronLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-const mockQuestions = [
-  {
-    id: 1,
-    title: "Two Sum",
-    difficulty: "Easy",
-    description: "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.",
-    examples: [
-      { input: "nums = [2,7,11,15], target = 9", output: "[0,1]" },
-      { input: "nums = [3,2,4], target = 6", output: "[1,2]" },
-    ],
-    starterCode: `public class Solution {
-    public int[] twoSum(int[] nums, int target) {
-        // Your code here
-        return new int[]{};
-    }
-}`,
-  },
-];
+import { studyDays, generatePracticeQuestions } from "@/data/studyDays";
 
 const Practice = () => {
   const { topicId } = useParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
+  
+  const dayNumber = parseInt(topicId || "1");
+  const dayData = studyDays.find(d => d.day === dayNumber) || studyDays[0];
+  const questions = generatePracticeQuestions(dayData);
+  
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [code, setCode] = useState(mockQuestions[0].starterCode);
+  const [code, setCode] = useState(questions[0].starterCode);
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
 
-  const question = mockQuestions[currentQuestion];
+  const question = questions[currentQuestion];
 
   const handleRun = () => {
     setIsRunning(true);
@@ -68,31 +56,62 @@ const Practice = () => {
     });
   };
 
+  const handleQuestionChange = (newIndex: number) => {
+    setCurrentQuestion(newIndex);
+    setCode(questions[newIndex].starterCode);
+    setOutput("");
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      handleQuestionChange(currentQuestion - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentQuestion < questions.length - 1) {
+      handleQuestionChange(currentQuestion + 1);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <div className="flex h-screen">
         {/* Left Panel - Problem Description */}
         <div className="w-1/2 border-r border-border overflow-y-auto p-6">
           <div className="mb-6">
-            <Button variant="outline" size="sm" className="mb-4">
+            <Button variant="outline" size="sm" className="mb-4" onClick={() => navigate("/topics")}>
               <ChevronLeft className="h-4 w-4 mr-2" />
               Back to Topics
             </Button>
             
             <div className="flex items-center gap-3 mb-4">
-              <h1 className="text-3xl font-bold neon-text">{question.title}</h1>
-              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                question.difficulty === "Easy" ? "bg-primary/20 text-primary" :
-                question.difficulty === "Medium" ? "bg-accent/20 text-accent" :
-                "bg-destructive/20 text-destructive"
-              }`}>
-                {question.difficulty}
-              </span>
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-semibold text-primary">Day {dayData.day}</span>
+                  <span className="text-xs text-muted-foreground">• Week {dayData.week}</span>
+                </div>
+                <h1 className="text-3xl font-bold neon-text">{question.title}</h1>
+              </div>
+              <div className="ml-auto flex flex-col gap-2">
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  question.difficulty === "Easy" ? "bg-primary/20 text-primary" :
+                  question.difficulty === "Medium" ? "bg-accent/20 text-accent" :
+                  "bg-destructive/20 text-destructive"
+                }`}>
+                  {question.difficulty}
+                </span>
+                {question.isCompulsory && (
+                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-primary text-primary-foreground neon-glow">
+                    Compulsory
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 
           <Card className="p-6 bg-card border-border mb-6">
-            <h2 className="text-xl font-bold mb-4 text-primary">Problem Description</h2>
+            <h2 className="text-xl font-bold mb-4 text-primary">Topic: {dayData.topic}</h2>
             <p className="text-foreground mb-4">{question.description}</p>
             
             <h3 className="text-lg font-semibold mb-3 text-primary">Examples:</h3>
@@ -113,20 +132,22 @@ const Practice = () => {
               disabled={currentQuestion === 0}
               variant="outline"
               size="sm"
+              onClick={handlePrevious}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
               Previous
             </Button>
             <Button
-              disabled={currentQuestion === mockQuestions.length - 1}
+              disabled={currentQuestion === questions.length - 1}
               variant="outline"
               size="sm"
+              onClick={handleNext}
             >
               Next
               <ChevronRight className="h-4 w-4 ml-2" />
             </Button>
             <span className="ml-auto text-sm text-muted-foreground self-center">
-              Question {currentQuestion + 1} of {mockQuestions.length}
+              Question {currentQuestion + 1} of {questions.length}
             </span>
           </div>
         </div>
