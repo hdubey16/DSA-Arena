@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { Question } from "../models/Question";
-import { Topic } from "../models/Topic";
+import Question from "../models/Question";
+import Topic from "../models/Topic";
 
 dotenv.config();
 

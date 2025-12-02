@@ -13,7 +13,7 @@ import {
   getDashboardStats,
   deleteUser
 } from '../controllers/adminController';
-import { authMiddleware } from '../middleware/authMiddleware';
+import { authMiddleware } from '../middleware/auth';
 import { adminMiddleware } from '../middleware/adminMiddleware';
 
 const router = express.Router();
