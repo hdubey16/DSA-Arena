@@ -102,11 +102,19 @@ export default {
         },
         "glow-pulse": {
           "0%, 100%": {
-            boxShadow: "0 0 20px hsl(120 100% 61% / 0.3)",
+            boxShadow: "0 0 20px hsl(274 86% 76% / 0.3)",
           },
           "50%": {
-            boxShadow: "0 0 40px hsl(120 100% 61% / 0.8)",
+            boxShadow: "0 0 40px hsl(274 86% 76% / 0.8)",
           },
+        },
+        grid: {
+          "0%": { transform: "translateY(-50%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "spin-slow": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
         },
       },
       animation: {
@@ -115,6 +123,8 @@ export default {
         "fade-in": "fade-in 0.6s ease-out",
         "slide-in": "slide-in 0.5s ease-out",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
+        grid: "grid 15s linear infinite",
+        "spin-slow": "spin-slow 4s linear infinite",
       },
     },
   },

@@ -67,26 +67,37 @@ export const getSavedCode = (dayId: number, questionIndex: number): string | nul
 };
 
 export const isDayUnlocked = (dayId: number): boolean => {
-  // Day 1 is always unlocked
-  if (dayId === 1) return true;
-  
-  // Check if previous day is completed
-  const previousDay = getDayProgress(dayId - 1);
-  return previousDay.allCompleted;
+  // Get user's unlocked days from localStorage (set during login)
+  const userDataStr = localStorage.getItem('user');
+  if (!userDataStr) {
+    // If not logged in, only Day 1 is unlocked
+    return dayId === 1;
+  }
+
+  try {
+    const userData = JSON.parse(userDataStr);
+    const unlockedDays = userData.unlockedDays || [1];
+    
+    // Day is unlocked if it's in the user's unlockedDays array
+    return unlockedDays.includes(dayId);
+  } catch (error) {
+    console.error('Error parsing user data:', error);
+    return dayId === 1; // Fallback to only Day 1
+  }
 };
 
 export const getCompletionStats = () => {
   const progress = getProgress();
   const completedQuestions = progress.filter(p => p.completed).length;
-  const totalQuestions = 39 * 5; // 39 days × 5 questions
-  const completedDays = Array.from({ length: 39 }, (_, i) => getDayProgress(i + 1))
+  const totalQuestions = 112 * 5; // 112 days × 5 questions
+  const completedDays = Array.from({ length: 112 }, (_, i) => getDayProgress(i + 1))
     .filter(d => d.allCompleted).length;
   
   return {
     completedQuestions,
     totalQuestions,
     completedDays,
-    totalDays: 39,
+    totalDays: 112,
     percentage: Math.round((completedQuestions / totalQuestions) * 100),
   };
 };

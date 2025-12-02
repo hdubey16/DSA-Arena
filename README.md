@@ -1,22 +1,12 @@
-# Welcome to your Lovable project
+# DSA Arena
 
-## Project info
+A comprehensive Data Structures and Algorithms learning platform in Java with curated DSA problems, hidden test cases, and LeetCode-style evaluation.
 
-**URL**: https://lovable.dev/projects/0614ccdb-64e1-4f27-8010-90166a332fcf
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/0614ccdb-64e1-4f27-8010-90166a332fcf) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
+## Project Setup
 
 **Use your preferred IDE**
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+Clone this repo and start developing locally.
 
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
@@ -60,14 +50,17 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+## Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/0614ccdb-64e1-4f27-8010-90166a332fcf) and click on Share -> Publish.
+This project can be deployed to any platform that supports Node.js applications (Vercel, Netlify, Railway, etc.).
 
-## Can I connect a custom domain to my Lovable project?
+## Features
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- 16-week structured DSA curriculum (112 days) covering all major topics
+- Topics: Introduction, Mathematics, Bit Magic, Recursion, Arrays, Searching, Sorting, Matrix, Hashing, Strings, Linked List, Stack, Queue, Deque, Tree, BST, Heap, Graph, Greedy, Backtracking, Dynamic Programming, Trie, Segment Tree, Disjoint Set
+- Monaco code editor with Java syntax highlighting
+- Hidden test cases for comprehensive evaluation
+- Admin panel for managing users, questions, and tests
+- Progress tracking and leaderboard
+- Plagiarism detection
+- Real-time code execution via Judge0

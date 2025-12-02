@@ -1,0 +1,195 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "React",
+    "Vite",
+    "TailwindCSS",
+    "Shadcn UI",
+    "Node.js",
+    "Express",
+    "MongoDB",
+    "Mongoose",
+    "JWT Authentication",
+    "Judge0 API",
+    "Monaco Editor"
+  ],
+  "features": [
+    {
+      "name": "Authentication System",
+      "description": "Unified login system supporting both user and admin authentication with JWT tokens, remember me functionality, and role-based access control",
+      "files": [
+        "src/pages/Login.tsx",
+        "src/contexts/AuthContext.tsx",
+        "backend/src/controllers/auth.controller.ts",
+        "backend/src/routes/auth.routes.ts",
+        "backend/src/middleware/auth.ts"
+      ]
+    },
+    {
+      "name": "Admin Dashboard",
+      "description": "Comprehensive admin panel with user management, test creation, plagiarism monitoring, day settings, and dashboard statistics",
+      "files": [
+        "src/pages/AdminDashboard.tsx",
+        "src/components/AdminNavBar.tsx",
+        "src/components/admin/UserManagement.tsx",
+        "src/components/admin/TestManagement.tsx",
+        "src/components/admin/PlagiarismMonitor.tsx",
+        "src/components/admin/DaySettings.tsx",
+        "backend/src/controllers/admin.controller.ts",
+        "backend/src/routes/admin.routes.ts"
+      ]
+    },
+    {
+      "name": "User Management",
+      "description": "Admin functionality to create, update, delete users, manage roles and status, with search and filtering capabilities",
+      "files": [
+        "src/components/admin/UserManagement.tsx",
+        "backend/src/controllers/admin.controller.ts",
+        "backend/src/models/User.ts"
+      ]
+    },
+    {
+      "name": "Day-by-Day Learning Path",
+      "description": "Structured 100-day Java learning curriculum with topics, questions, and progressive unlocking system",
+      "files": [
+        "src/pages/Topics.tsx",
+        "src/data/studyDays.ts",
+        "backend/src/models/DaySettings.ts",
+        "backend/src/scripts/populate-day-by-day.ts"
+      ]
+    },
+    {
+      "name": "Code Practice Interface",
+      "description": "Interactive coding environment with Monaco editor, test case execution, and real-time feedback using Judge0 API",
+      "files": [
+        "src/pages/Practice.tsx",
+        "backend/src/services/codeExecutor.ts",
+        "backend/src/controllers/submissionController.ts",
+        "backend/src/routes/submission.routes.ts"
+      ]
+    },
+    {
+      "name": "Test Management System",
+      "description": "Create and manage coding tests with time limits, question selection, and live/scheduled status",
+      "files": [
+        "src/components/admin/TestManagement.tsx",
+        "backend/src/controllers/testController.ts",
+        "backend/src/models/Test.ts",
+        "backend/src/models/TestSubmission.ts"
+      ]
+    },
+    {
+      "name": "Progress Tracking",
+      "description": "Track user progress through days, questions, and submissions with completion statistics",
+      "files": [
+        "src/utils/progressTracker.ts",
+        "backend/src/models/UserProgress.ts",
+        "backend/src/models/Submission.ts"
+      ]
+    },
+    {
+      "name": "Profile Management",
+      "description": "User profile page displaying progress, achievements, and account information with admin redirect",
+      "files": [
+        "src/pages/Profile.tsx"
+      ]
+    },
+    {
+      "name": "Question Database",
+      "description": "Repository of Java coding questions with test cases, examples, difficulty levels, and topics",
+      "files": [
+        "backend/src/models/Question.ts",
+        "backend/src/scripts/populate-day-by-day.ts"
+      ]
+    },
+    {
+      "name": "Dashboard Statistics",
+      "description": "Real-time statistics showing user counts, question metrics, submission data, and system health",
+      "files": [
+        "src/components/admin/DashboardStats.tsx",
+        "backend/src/controllers/dashboardController.ts"
+      ]
+    },
+    {
+      "name": "Day Settings Management",
+      "description": "Admin control for locking/unlocking days, managing access, and bulk operations",
+      "files": [
+        "src/components/admin/DaySettings.tsx",
+        "backend/src/controllers/adminController.ts",
+        "backend/src/models/DaySettings.ts"
+      ]
+    },
+    {
+      "name": "Plagiarism Detection",
+      "description": "Monitor and detect potential code plagiarism between user submissions",
+      "files": [
+        "src/components/admin/PlagiarismMonitor.tsx"
+      ]
+    },
+    {
+      "name": "Landing Page",
+      "description": "Home page with RetroGrid animation, feature showcase, and navigation to login",
+      "files": [
+        "src/pages/Index.tsx",
+        "src/components/ui/retro-grid.tsx"
+      ]
+    },
+    {
+      "name": "Navigation Components",
+      "description": "Separate navigation bars for students and admins with role-based menu items",
+      "files": [
+        "src/components/StudentNavBar.tsx",
+        "src/components/AdminNavBar.tsx",
+        "src/components/NavLink.tsx"
+      ]
+    },
+    {
+      "name": "API Integration",
+      "description": "Centralized API client with axios interceptors for authentication and error handling",
+      "files": [
+        "src/lib/api.ts"
+      ]
+    },
+    {
+      "name": "MongoDB Integration",
+      "description": "Database connection and configuration for MongoDB Atlas",
+      "files": [
+        "backend/src/config/db.ts",
+        "src/lib/mongodb.ts"
+      ]
+    },
+    {
+      "name": "Code Execution Service",
+      "description": "Integration with Judge0 API for executing and evaluating Java code submissions",
+      "files": [
+        "backend/src/services/codeExecutor.ts"
+      ]
+    },
+    {
+      "name": "Security Logging",
+      "description": "Track security events and suspicious activities",
+      "files": [
+        "backend/src/models/SecurityLog.ts"
+      ]
+    },
+    {
+      "name": "Error Boundary",
+      "description": "React error boundary component for graceful error handling",
+      "files": [
+        "src/components/ErrorBoundary.tsx"
+      ]
+    },
+    {
+      "name": "UI Components Library",
+      "description": "Comprehensive set of reusable UI components from Shadcn UI",
+      "files": [
+        "src/components/ui/button.tsx",
+        "src/components/ui/card.tsx",
+        "src/components/ui/dialog.tsx",
+        "src/components/ui/input.tsx",
+        "src/components/ui/table.tsx",
+        "src/components/ui/tabs.tsx"
+      ]
+    }
+  ]
+}

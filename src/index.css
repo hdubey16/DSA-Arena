@@ -7,8 +7,24 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  /* Disable copy-paste and text selection globally */
+  * {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+  
+  /* Allow text selection in input and textarea elements */
+  input, textarea, [contenteditable="true"] {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+  }
+
   :root {
-    /* Cyberpunk Black + Neon Green Theme */
+    /* Cyberpunk Black + Lavender Theme */
     --background: 0 0% 0%; /* Pure black */
     --foreground: 0 0% 98%; /* Almost white */
 
@@ -18,16 +34,16 @@ All colors MUST be HSL.
     --popover: 0 0% 6%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 120 100% 61%; /* Neon green #39FF14 */
+    --primary: 274 86% 76%; /* Lavender #CB94F7 */
     --primary-foreground: 0 0% 0%;
 
     --secondary: 0 0% 8%; /* Dark background for secondary elements */
-    --secondary-foreground: 120 100% 61%;
+    --secondary-foreground: 274 86% 76%;
 
     --muted: 0 0% 10%;
     --muted-foreground: 0 0% 60%;
 
-    --accent: 190 100% 50%; /* Electric blue accent */
+    --accent: 280 100% 70%; /* Purple accent */
     --accent-foreground: 0 0% 0%;
 
     --destructive: 0 84% 60%;
@@ -35,18 +51,18 @@ All colors MUST be HSL.
 
     --border: 0 0% 15%;
     --input: 0 0% 10%;
-    --ring: 120 100% 61%;
+    --ring: 274 86% 76%;
 
     --radius: 0.5rem;
 
-    /* Custom neon glow variables */
-    --neon-glow: 0 0 20px hsl(120 100% 61% / 0.5);
-    --neon-glow-strong: 0 0 30px hsl(120 100% 61% / 0.8);
-    --neon-text-shadow: 0 0 10px hsl(120 100% 61% / 0.8);
+    /* Custom lavender glow variables */
+    --neon-glow: 0 0 20px hsl(274 86% 76% / 0.5);
+    --neon-glow-strong: 0 0 30px hsl(274 86% 76% / 0.8);
+    --neon-text-shadow: 0 0 10px hsl(274 86% 76% / 0.8);
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(120 100% 61%), hsl(120 100% 45%));
-    --gradient-radial: radial-gradient(circle at center, hsl(120 100% 61% / 0.1), transparent);
+    --gradient-primary: linear-gradient(135deg, hsl(274 86% 76%), hsl(274 86% 65%));
+    --gradient-radial: radial-gradient(circle at center, hsl(274 86% 76% / 0.1), transparent);
   }
 }
 
@@ -89,20 +105,20 @@ All colors MUST be HSL.
 
 @keyframes glow {
   from {
-    box-shadow: 0 0 10px hsl(120 100% 61% / 0.3);
+    box-shadow: 0 0 10px hsl(274 86% 76% / 0.3);
   }
   to {
-    box-shadow: 0 0 30px hsl(120 100% 61% / 0.8);
+    box-shadow: 0 0 30px hsl(274 86% 76% / 0.8);
   }
 }
 
 @keyframes flicker {
   0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
     opacity: 1;
-    text-shadow: 0 0 10px hsl(120 100% 61% / 0.8);
+    text-shadow: 0 0 10px hsl(274 86% 76% / 0.8);
   }
   20%, 24%, 55% {
     opacity: 0.8;
-    text-shadow: 0 0 5px hsl(120 100% 61% / 0.5);
+    text-shadow: 0 0 5px hsl(274 86% 76% / 0.5);
   }
 }
