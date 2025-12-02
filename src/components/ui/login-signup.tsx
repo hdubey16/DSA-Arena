@@ -191,14 +191,24 @@ export default function LoginCardSection({
         <span className="text-xs tracking-[0.14em] uppercase text-[#CB94F7] font-bold">
           DSA Arena
         </span>
-        <Button
-          variant="outline"
-          className="h-9 rounded-lg border-zinc-800 bg-zinc-900 text-zinc-50 hover:bg-zinc-900/80 hover:border-[#CB94F7]/50"
-          onClick={() => window.location.href = '/'}
-        >
-          <span className="mr-2">Home</span>
-          <ArrowRight className="h-4 w-4" />
-        </Button>
+        <div className="flex gap-3">
+          <Button
+            variant="outline"
+            className="h-9 rounded-lg border-zinc-800 bg-zinc-900 text-zinc-50 hover:bg-zinc-900/80 hover:border-[#CB94F7]/50"
+            onClick={() => window.location.href = '/admin/login'}
+          >
+            <Lock className="h-4 w-4 mr-2" />
+            <span>Admin</span>
+          </Button>
+          <Button
+            variant="outline"
+            className="h-9 rounded-lg border-zinc-800 bg-zinc-900 text-zinc-50 hover:bg-zinc-900/80 hover:border-[#CB94F7]/50"
+            onClick={() => window.location.href = '/'}
+          >
+            <span className="mr-2">Home</span>
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </div>
       </header>
 
       {/* Centered Login Card */}

@@ -1,30 +1,60 @@
-# DSA Arena
+# DSA Arena 🚀
 
 A comprehensive Data Structures and Algorithms learning platform in Java with curated DSA problems, hidden test cases, and LeetCode-style evaluation.
 
-## Project Setup
+## ⚠️ Important: Security Setup Required
 
-**Use your preferred IDE**
+**Before running the project**, you must set up environment variables with your own credentials.
 
-Clone this repo and start developing locally.
+📖 **See [SECURITY_SETUP.md](./SECURITY_SETUP.md) for detailed setup instructions**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Quick Start
+
+**Prerequisites**: Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
 Follow these steps:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+# Step 1: Clone the repository
+git clone https://github.com/hdubey16/DSA-Arena.git
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Step 2: Navigate to the project directory
+cd DSA-Arena
 
-# Step 3: Install the necessary dependencies.
+# Step 3: Setup environment variables (REQUIRED!)
+# Copy example files and fill in your credentials
+cp .env.example .env
+cp backend/.env.example backend/.env
+
+# Edit .env and backend/.env with your credentials
+# See SECURITY_SETUP.md for detailed instructions
+
+# Step 4: Install frontend dependencies
 npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 5: Install backend dependencies
+cd backend
+npm i
+cd ..
+
+# Step 6: Start the backend server (in one terminal)
+cd backend
+npm run dev
+
+# Step 7: Start the frontend (in another terminal)
 npm run dev
 ```
+
+## 🔒 Environment Variables
+
+This project requires:
+- MongoDB Atlas connection string
+- JWT secret key
+- Judge0 API key from RapidAPI
+
+**Never commit `.env` files!** Use `.env.example` as templates.
+
+See [SECURITY_SETUP.md](./SECURITY_SETUP.md) for complete setup guide.
 
 **Edit a file directly in GitHub**
 

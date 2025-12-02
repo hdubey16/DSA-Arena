@@ -51,7 +51,7 @@ NODE_ENV=production
 PORT=5000
 
 # MongoDB Configuration
-MONGODB_URI=mongodb+srv://JavaStudy:JavaStudy@cluster0.6g4tx28.mongodb.net/javaprep_arena?retryWrites=true&w=majority
+MONGODB_URI=your_mongodb_atlas_connection_string_here
 
 # JWT Configuration
 JWT_SECRET=javaprep_super_secret_key_2024_change_in_production_IMPORTANT
@@ -62,7 +62,7 @@ FRONTEND_URL=https://your-frontend-url.vercel.app
 
 # Judge0 API Configuration
 JUDGE0_API_URL=https://judge0-ce.p.rapidapi.com
-JUDGE0_API_KEY=ef5eccc51amsh436977dba683b49p1f30ffjsne2238dc020dc
+JUDGE0_API_KEY=your_judge0_rapidapi_key_here
 ```
 
 ### 3. Backend Vercel Configuration

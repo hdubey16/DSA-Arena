@@ -25,7 +25,7 @@ PORT=5000
 ```
 
 ```env
-MONGODB_URI=mongodb+srv://JavaStudy:JavaStudy@cluster0.6g4tx28.mongodb.net/javaprep_arena?retryWrites=true&w=majority
+MONGODB_URI=your_mongodb_atlas_connection_string_here
 ```
 
 ```env
@@ -50,7 +50,7 @@ JUDGE0_API_URL=https://judge0-ce.p.rapidapi.com
 ```
 
 ```env
-JUDGE0_API_KEY=ef5eccc51amsh436977dba683b49p1f30ffjsne2238dc020dc
+JUDGE0_API_KEY=your_judge0_rapidapi_key_here
 ```
 
 ---
