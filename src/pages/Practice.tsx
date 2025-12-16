@@ -128,6 +128,39 @@ const Practice = () => {
     setOutputTab('output');
   }, [currentQuestion, dayNumber, questions]);
 
+  // Auto-save code every second
+  useEffect(() => {
+    const autoSaveInterval = setInterval(() => {
+      if (code && code !== questions[currentQuestion]?.starterCode) {
+        // Save to localStorage
+        const progress = localStorage.getItem('dsa_progress') || '[]';
+        const progressData = JSON.parse(progress);
+        
+        const existingIndex = progressData.findIndex(
+          (p: any) => p.dayId === dayNumber && p.questionIndex === currentQuestion
+        );
+        
+        if (existingIndex >= 0) {
+          progressData[existingIndex].code = code;
+          progressData[existingIndex].timestamp = Date.now();
+        } else {
+          progressData.push({
+            dayId: dayNumber,
+            questionIndex: currentQuestion,
+            completed: false,
+            code: code,
+            timestamp: Date.now()
+          });
+        }
+        
+        localStorage.setItem('dsa_progress', JSON.stringify(progressData));
+        console.log('[Auto-save] Code saved to localStorage');
+      }
+    }, 1000); // Save every 1 second
+
+    return () => clearInterval(autoSaveInterval);
+  }, [code, dayNumber, currentQuestion, questions]);
+
   // Fetch questions from backend
   useEffect(() => {
     const topicIdForAPI = `day-${dayNumber}`;
