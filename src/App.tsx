@@ -29,9 +29,15 @@ const App = () => {
   // Disable copy-paste globally
   React.useEffect(() => {
     const disableCopyPaste = (e: ClipboardEvent) => {
-      const target = e.target as HTMLElement;
+      let target = e.target as Node;
+      // Handle text nodes
+      if (target.nodeType === Node.TEXT_NODE) {
+        target = target.parentNode as Node;
+      }
+      const element = target as HTMLElement;
+
       // Allow copy if the element or its parent has the 'allow-copy' class
-      if (target.closest('.allow-copy')) {
+      if (element.closest && element.closest('.allow-copy')) {
         return true;
       }
       e.preventDefault();
@@ -39,9 +45,15 @@ const App = () => {
     };
 
     const disableContextMenu = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
+      let target = e.target as Node;
+      // Handle text nodes
+      if (target.nodeType === Node.TEXT_NODE) {
+        target = target.parentNode as Node;
+      }
+      const element = target as HTMLElement;
+
       // Allow context menu if the element or its parent has the 'allow-copy' class
-      if (target.closest('.allow-copy')) {
+      if (element.closest && element.closest('.allow-copy')) {
         return true;
       }
       e.preventDefault();

@@ -16,7 +16,7 @@ All colors MUST be HSL.
   }
   
   /* Allow text selection in input and textarea elements */
-  input, textarea, [contenteditable="true"], .allow-copy {
+  input, textarea, [contenteditable="true"], .allow-copy, .allow-copy * {
     user-select: text;
     -webkit-user-select: text;
     -moz-user-select: text;
