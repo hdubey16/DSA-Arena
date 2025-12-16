@@ -43,15 +43,24 @@ export const getLeaderboard = async (req: Request, res: Response) => {
           questionsSolved,
           totalSubmissions: submissionCount,
           avgRuntime,
-          avgMemory,
-          // Calculate score: questions solved is weighted more than speed
-          score: questionsSolved * 100 - avgRuntime * 0.1
+          avgMemory
         };
       })
     );
 
-    // Sort by score (higher is better)
-    leaderboardData.sort((a, b) => b.score - a.score);
+    // Sort by questions solved (primary), then by average runtime (secondary - lower is better)
+    leaderboardData.sort((a, b) => {
+      // First, sort by questions solved (descending)
+      if (b.questionsSolved !== a.questionsSolved) {
+        return b.questionsSolved - a.questionsSolved;
+      }
+      // If same questions solved, sort by runtime (ascending - faster is better)
+      if (a.avgRuntime !== b.avgRuntime) {
+        return a.avgRuntime - b.avgRuntime;
+      }
+      // If still tied, sort by memory (ascending - less is better)
+      return a.avgMemory - b.avgMemory;
+    });
 
     // Add ranks
     const rankedData = leaderboardData.map((user, index) => ({
