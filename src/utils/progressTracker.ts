@@ -41,6 +41,11 @@ export const saveQuestionProgress = (dayId: number, questionIndex: number, code:
   }
 
   localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+  
+  // Update streak when a question is completed
+  if (completed) {
+    updateStreak();
+  }
 };
 
 export const getDayProgress = (dayId: number): DayProgress => {
@@ -100,4 +105,62 @@ export const getCompletionStats = () => {
     totalDays: 112,
     percentage: Math.round((completedQuestions / totalQuestions) * 100),
   };
+};
+
+// Streak management functions
+const STREAK_KEY = 'streakCount';
+const LAST_ACTIVITY_KEY = 'lastActivityDate';
+
+export const updateStreak = () => {
+  const today = new Date().toDateString();
+  const lastActivity = localStorage.getItem(LAST_ACTIVITY_KEY);
+  
+  if (!lastActivity) {
+    // First activity
+    localStorage.setItem(STREAK_KEY, '1');
+    localStorage.setItem(LAST_ACTIVITY_KEY, today);
+    return 1;
+  }
+  
+  const lastDate = new Date(lastActivity);
+  const todayDate = new Date(today);
+  const diffTime = todayDate.getTime() - lastDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 0) {
+    // Same day - no change
+    return parseInt(localStorage.getItem(STREAK_KEY) || '1');
+  } else if (diffDays === 1) {
+    // Consecutive day - increment streak
+    const currentStreak = parseInt(localStorage.getItem(STREAK_KEY) || '0');
+    const newStreak = currentStreak + 1;
+    localStorage.setItem(STREAK_KEY, String(newStreak));
+    localStorage.setItem(LAST_ACTIVITY_KEY, today);
+    return newStreak;
+  } else {
+    // Streak broken - reset to 1
+    localStorage.setItem(STREAK_KEY, '1');
+    localStorage.setItem(LAST_ACTIVITY_KEY, today);
+    return 1;
+  }
+};
+
+export const getStreak = (): number => {
+  const lastActivity = localStorage.getItem(LAST_ACTIVITY_KEY);
+  const streakCount = parseInt(localStorage.getItem(STREAK_KEY) || '0');
+  
+  if (!lastActivity) return 0;
+  
+  const lastDate = new Date(lastActivity);
+  const today = new Date();
+  const diffTime = today.getTime() - lastDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  
+  // If last activity was today or yesterday, streak is still valid
+  if (diffDays <= 1) {
+    return streakCount;
+  }
+  
+  // Streak broken - return 0
+  return 0;
 };

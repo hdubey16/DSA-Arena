@@ -18,7 +18,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import StudentNavBar from "@/components/StudentNavBar";
 import { RetroGrid } from "@/components/ui/retro-grid";
-import { getCompletionStats } from "@/utils/progressTracker";
+import { getCompletionStats, getStreak } from "@/utils/progressTracker";
 import { toast } from "sonner";
 
 const Profile = () => {
@@ -58,22 +58,7 @@ const Profile = () => {
   };
 
   const calculateStreak = () => {
-    // Calculate streak based on completion stats
-    const lastActivityDate = localStorage.getItem('lastActivityDate');
-    const streakCount = localStorage.getItem('streakCount') || '0';
-    
-    if (lastActivityDate) {
-      const lastDate = new Date(lastActivityDate);
-      const today = new Date();
-      const diffTime = Math.abs(today.getTime() - lastDate.getTime());
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      
-      if (diffDays <= 1) {
-        return parseInt(streakCount);
-      }
-    }
-    
-    return 0;
+    return getStreak();
   };
 
   const formatDate = (dateString: string) => {
