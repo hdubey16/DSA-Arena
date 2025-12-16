@@ -1,5 +1,8 @@
 // Progress tracking utilities
+import { userAPI } from '@/lib/api';
+
 const PROGRESS_KEY = 'javaprep_progress';
+const PROGRESS_SYNCED_KEY = 'javaprep_progress_synced';
 
 export interface QuestionProgress {
   dayId: number;
@@ -163,4 +166,56 @@ export const getStreak = (): number => {
   
   // Streak broken - return 0
   return 0;
+};
+
+// Sync progress from backend to localStorage
+export const syncProgressFromBackend = async () => {
+  try {
+    const response = await userAPI.getProgress();
+    const backendProgress = response.data.progress;
+    
+    if (!backendProgress) return;
+    
+    // Convert backend format to localStorage format
+    const localProgress: QuestionProgress[] = [];
+    
+    Object.values(backendProgress).forEach((dayData: any) => {
+      dayData.questions.forEach((q: any) => {
+        localProgress.push({
+          dayId: dayData.dayId,
+          questionIndex: q.questionIndex,
+          completed: q.completed,
+          code: q.code || '',
+          timestamp: new Date(q.lastAttempt).getTime()
+        });
+      });
+    });
+    
+    // Merge with existing localStorage data (keep the most recent)
+    const existingProgress = getProgress();
+    const mergedProgress = [...localProgress];
+    
+    existingProgress.forEach(existing => {
+      const backendMatch = mergedProgress.find(
+        p => p.dayId === existing.dayId && p.questionIndex === existing.questionIndex
+      );
+      
+      if (!backendMatch) {
+        mergedProgress.push(existing);
+      } else if (existing.timestamp > backendMatch.timestamp) {
+        // Local is newer, replace backend data
+        const index = mergedProgress.indexOf(backendMatch);
+        mergedProgress[index] = existing;
+      }
+    });
+    
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(mergedProgress));
+    localStorage.setItem(PROGRESS_SYNCED_KEY, new Date().toISOString());
+    
+    console.log('Progress synced from backend:', mergedProgress.length, 'records');
+    return mergedProgress;
+  } catch (error) {
+    console.error('Failed to sync progress from backend:', error);
+    return getProgress(); // Return local progress as fallback
+  }
 };

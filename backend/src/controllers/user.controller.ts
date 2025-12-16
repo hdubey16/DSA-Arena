@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import Topic from '../models/Topic';
 import Question from '../models/Question';
+import UserProgress from '../models/UserProgress';
 
 export const getTopics = async (req: AuthRequest, res: Response) => {
   try {
@@ -51,13 +52,43 @@ export const submitAnswer = async (req: AuthRequest, res: Response) => {
 
 export const getProgress = async (req: AuthRequest, res: Response) => {
   try {
-    // Placeholder for user progress tracking
-    res.json({
-      completedTopics: [],
-      totalScore: 0,
-      progress: 0
+    const userId = req.user?.id;
+    
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    // Get all user progress records
+    const progressRecords = await UserProgress.find({ userId });
+    
+    // Group by day
+    const progressByDay: Record<number, any> = {};
+    
+    progressRecords.forEach(record => {
+      if (!progressByDay[record.dayId]) {
+        progressByDay[record.dayId] = {
+          dayId: record.dayId,
+          questions: []
+        };
+      }
+      
+      progressByDay[record.dayId].questions.push({
+        questionIndex: record.questionIndex,
+        completed: record.completed,
+        code: record.code,
+        lastAttempt: record.lastAttempt,
+        attempts: record.attempts,
+        testsPassed: record.testsPassed,
+        totalTests: record.totalTests
+      });
     });
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching progress' });
+
+    res.json({
+      success: true,
+      progress: progressByDay
+    });
+  } catch (error: any) {
+    console.error('Error fetching progress:', error);
+    res.status(500).json({ message: 'Error fetching progress', error: error.message });
   }
 };

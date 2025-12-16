@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '@/lib/api';
+import { syncProgressFromBackend } from '@/utils/progressTracker';
 
 export type UserRole = 'user' | 'moderator' | 'admin';
 
@@ -105,6 +106,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('auth_token', token);
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
+
+      // Sync progress from backend after login
+      if (!isAdmin) {
+        console.log('[AuthContext] Syncing progress from backend...');
+        await syncProgressFromBackend();
+      }
 
       // Track login session
       await logSession(userData.id, 'login');
