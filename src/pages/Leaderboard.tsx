@@ -34,11 +34,14 @@ interface LeaderboardEntry {
 
 const Leaderboard = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking
+    if (authLoading) return;
+    
     if (!isAuthenticated) {
       toast.error("Please login to view leaderboard");
       navigate("/login");
@@ -46,7 +49,7 @@ const Leaderboard = () => {
     }
 
     fetchLeaderboard();
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, authLoading, navigate]);
 
   const fetchLeaderboard = async () => {
     try {
