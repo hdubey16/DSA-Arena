@@ -68,11 +68,9 @@ export class JavaCodeExecutor {
 
       // Run each test case through Judge0
       for (const testCase of testCases) {
-        const startTime = Date.now();
         const testResult = await this.runTestCase(code, testCase);
-        const runtime = Date.now() - startTime;
 
-        totalRuntime += runtime;
+        totalRuntime += testResult.runtime;
         totalMemory += testResult.memory;
 
         const passed = testResult.actualOutput.trim() === testCase.expectedOutput.trim();
@@ -85,7 +83,7 @@ export class JavaCodeExecutor {
           actualOutput: testResult.actualOutput,
           passed,
           error: testResult.error,
-          runtime,
+          runtime: testResult.runtime,
           memory: testResult.memory
         });
 
@@ -167,7 +165,7 @@ export class JavaCodeExecutor {
   private async runTestCase(
     code: string,
     testCase: { input: string; expectedOutput: string }
-  ): Promise<{ actualOutput: string; memory: number; error?: string }> {
+  ): Promise<{ actualOutput: string; memory: number; runtime: number; error?: string }> {
     try {
       // Step 1: Submit code to Judge0
       const submission = await this.submitToJudge0(code, testCase.input);
@@ -177,6 +175,7 @@ export class JavaCodeExecutor {
         return {
           actualOutput: '',
           memory: 0,
+          runtime: 0,
           error: 'Failed to submit code to Judge0'
         };
       }
@@ -189,6 +188,7 @@ export class JavaCodeExecutor {
         return {
           actualOutput: '',
           memory: result.memory || 0,
+          runtime: parseFloat(result.time) * 1000 || 0, // Convert seconds to ms
           error: result.compile_output || 'Compilation error'
         };
       }
@@ -198,6 +198,7 @@ export class JavaCodeExecutor {
         return {
           actualOutput: result.stdout || '',
           memory: result.memory || 0,
+          runtime: parseFloat(result.time) * 1000 || 0, // Convert seconds to ms
           error: result.stderr
         };
       }
@@ -206,6 +207,7 @@ export class JavaCodeExecutor {
       return {
         actualOutput: result.stdout || '',
         memory: result.memory || 0,
+        runtime: parseFloat(result.time) * 1000 || 0, // Convert seconds to ms
         error: undefined
       };
     } catch (err: any) {
@@ -213,6 +215,7 @@ export class JavaCodeExecutor {
       return {
         actualOutput: '',
         memory: 0,
+        runtime: 0,
         error: `Execution error: ${err.message}`
       };
     }
