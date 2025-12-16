@@ -93,7 +93,7 @@ const Practice = () => {
   const dayProgress = getDayProgress(dayNumber);
   const questionCompleted = isQuestionCompleted(dayNumber, currentQuestion);
 
-  // Check if day is unlocked
+  // Check if day is unlocked (only on initial mount)
   useEffect(() => {
     if (!isDayUnlocked(dayNumber)) {
       toast({
@@ -103,7 +103,8 @@ const Practice = () => {
       });
       navigate("/topics");
     }
-  }, [dayNumber, navigate, toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
 
   // Load saved code on mount or question change
   useEffect(() => {
