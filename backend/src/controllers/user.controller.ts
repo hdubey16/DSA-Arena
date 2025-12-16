@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
+import mongoose from 'mongoose';
 import Topic from '../models/Topic';
 import Question from '../models/Question';
 import UserProgress from '../models/UserProgress';
@@ -59,11 +60,24 @@ export const getProgress = async (req: AuthRequest, res: Response) => {
     }
 
     console.log('[getProgress] Fetching progress for user:', userId);
+    console.log('[getProgress] User ID type:', typeof userId);
+
+    // Convert string userId to ObjectId for MongoDB query
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    console.log('[getProgress] Converted to ObjectId:', userObjectId);
 
     // Get all user progress records
-    const progressRecords = await UserProgress.find({ userId });
+    const progressRecords = await UserProgress.find({ userId: userObjectId });
     
     console.log('[getProgress] Found', progressRecords.length, 'progress records');
+    
+    if (progressRecords.length > 0) {
+      console.log('[getProgress] Sample record:', {
+        dayId: progressRecords[0].dayId,
+        questionIndex: progressRecords[0].questionIndex,
+        completed: progressRecords[0].completed
+      });
+    }
     
     // Group by day
     const progressByDay: Record<number, any> = {};
