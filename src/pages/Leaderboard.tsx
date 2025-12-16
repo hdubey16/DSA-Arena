@@ -40,7 +40,12 @@ const Leaderboard = () => {
 
   useEffect(() => {
     // Wait for auth to finish loading before checking
-    if (authLoading) return;
+    if (authLoading) {
+      console.log('[Leaderboard] Auth loading...');
+      return;
+    }
+    
+    console.log('[Leaderboard] Auth loaded. Authenticated:', isAuthenticated, 'User:', user?.email);
     
     if (!isAuthenticated) {
       toast.error("Please login to view leaderboard");
@@ -49,7 +54,7 @@ const Leaderboard = () => {
     }
 
     fetchLeaderboard();
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [isAuthenticated, authLoading, user, navigate]); // Removed toast, added user
 
   const fetchLeaderboard = async () => {
     try {

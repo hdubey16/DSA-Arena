@@ -67,7 +67,7 @@ const Practice = () => {
       return;
     }
     
-    console.log('[Practice] Auth loaded. Authenticated:', isAuthenticated);
+    console.log('[Practice] Auth loaded. Authenticated:', isAuthenticated, 'User:', user?.email);
     
     if (!isAuthenticated) {
       console.log('[Practice] Not authenticated, redirecting to login');
@@ -78,7 +78,7 @@ const Practice = () => {
       });
       navigate("/login");
     }
-  }, [isAuthenticated, authLoading, navigate, toast]);
+  }, [isAuthenticated, authLoading, user, navigate]); // Removed toast from deps
 
   // Questions state
   const [questions, setQuestions] = useState(() => generatePracticeQuestions(dayData));

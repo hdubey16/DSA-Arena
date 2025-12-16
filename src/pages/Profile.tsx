@@ -29,7 +29,12 @@ const Profile = () => {
 
   useEffect(() => {
     // Wait for auth to finish loading before checking
-    if (authLoading) return;
+    if (authLoading) {
+      console.log('[Profile] Auth loading...');
+      return;
+    }
+    
+    console.log('[Profile] Auth loaded. Authenticated:', isAuthenticated, 'User:', user?.email);
     
     if (!isAuthenticated) {
       toast.error("Please login to view your profile");
@@ -47,7 +52,7 @@ const Profile = () => {
       }
       setUserData(parsedUser);
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, authLoading, user, navigate]); // Removed toast from deps
 
   const getRoleBadgeColor = (role: string) => {
     switch (role?.toLowerCase()) {

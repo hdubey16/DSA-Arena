@@ -50,11 +50,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           // First set user from localStorage for immediate auth
           const parsedUser = JSON.parse(storedUser);
-          console.log('[AuthContext] Setting user from localStorage:', parsedUser.email);
-          setUser(parsedUser);
-          setLoading(false); // Set loading to false immediately after restoring from localStorage
+          console.log('[AuthContext] Setting user from localStorage:', parsedUser.email, 'Role:', parsedUser.role);
           
-          // Then verify token in background (don't await to avoid blocking)
+          // Set user AND loading together - React batches these updates
+          setUser(parsedUser);
+          setLoading(false);
+          
+          // Then verify token in background
           console.log('[AuthContext] Verifying token with backend...');
           authAPI.getCurrentUser()
             .then((response) => {
@@ -85,6 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setLoading(false);
         }
       } else {
+        console.log('[AuthContext] No token/user found, setting loading to false');
         setLoading(false);
       }
     };
