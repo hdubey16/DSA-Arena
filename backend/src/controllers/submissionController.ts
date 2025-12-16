@@ -2,6 +2,9 @@ import { Request, Response } from 'express';
 import JavaCodeExecutor from '../services/codeExecutor';
 import Question from '../models/Question';
 import Submission from '../models/Submission';
+import UserProgress from '../models/UserProgress';
+import User from '../models/User';
+import DaySettings from '../models/DaySettings';
 
 export const submitCode = async (req: Request, res: Response) => {
   try {
@@ -79,10 +82,7 @@ export const submitCode = async (req: Request, res: Response) => {
     await submission.save();
 
     // Update UserProgress if question is completed (Accepted)
-    if (status === 'Accepted') {
-      const UserProgress = (await import('../models/UserProgress')).default;
-      const User = (await import('../models/User')).default;
-      const DaySettings = (await import('../models/DaySettings')).default;
+    if (status === 'Accepted' && userId !== 'anonymous') {
       
       // Extract day number from topicId (e.g., 'day-1' -> 1)
       const dayId = parseInt(topicId.replace('day-', ''));
