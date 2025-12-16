@@ -187,7 +187,7 @@ export class JavaCodeExecutor {
       if (result.status.id === 6) {
         return {
           actualOutput: '',
-          memory: result.memory || 0,
+          memory: Math.round((result.memory || 0) / 1024), // Convert KB to MB
           runtime: parseFloat(result.time) * 1000 || 0, // Convert seconds to ms
           error: result.compile_output || 'Compilation error'
         };
@@ -197,7 +197,7 @@ export class JavaCodeExecutor {
       if (result.stderr) {
         return {
           actualOutput: result.stdout || '',
-          memory: result.memory || 0,
+          memory: Math.round((result.memory || 0) / 1024), // Convert KB to MB
           runtime: parseFloat(result.time) * 1000 || 0, // Convert seconds to ms
           error: result.stderr
         };
@@ -206,7 +206,7 @@ export class JavaCodeExecutor {
       // Success case
       return {
         actualOutput: result.stdout || '',
-        memory: result.memory || 0,
+        memory: Math.round((result.memory || 0) / 1024), // Convert KB to MB
         runtime: parseFloat(result.time) * 1000 || 0, // Convert seconds to ms
         error: undefined
       };
