@@ -15,6 +15,7 @@ export const submitCode = async (req: Request, res: Response) => {
 
     // Validate input
     if (!code || !questionId || !topicId) {
+      console.error('Missing required fields:', { code: !!code, questionId, topicId });
       return res.status(400).json({
         error: 'Code, questionId, and topicId are required'
       });
@@ -84,11 +85,16 @@ export const submitCode = async (req: Request, res: Response) => {
     // Update UserProgress if question is completed (Accepted)
     if (status === 'Accepted' && userId !== 'anonymous') {
       
-      // Extract day number from topicId (e.g., 'day-1' -> 1)
-      const dayId = parseInt(topicId.replace('day-', ''));
+      // Extract day number from topicId (e.g., 'day-1' -> 1 or just 1 -> 1)
+      const topicIdStr = String(topicId);
+      const dayId = topicIdStr.includes('day-') 
+        ? parseInt(topicIdStr.replace('day-', '')) 
+        : parseInt(topicIdStr);
+      
+      console.log(`📊 Processing progress: topicId=${topicId}, dayId=${dayId}`);
       
       // Get all questions for this day to find the index of current question
-      const allDayQuestions = await Question.find({ topicId }).sort({ createdAt: 1 });
+      const allDayQuestions = await Question.find({ topicId: topicIdStr }).sort({ createdAt: 1 });
       const questionIndex = allDayQuestions.findIndex(q => q._id.toString() === questionId.toString());
       
       if (questionIndex === -1) {
@@ -170,10 +176,12 @@ export const submitCode = async (req: Request, res: Response) => {
       error: executionResult.error
     });
   } catch (error: any) {
-    console.error('Submission error:', error);
+    console.error('❌ Submission error:', error);
+    console.error('Error stack:', error.stack);
     res.status(500).json({
       error: 'Failed to process submission',
-      message: error.message
+      message: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 };
