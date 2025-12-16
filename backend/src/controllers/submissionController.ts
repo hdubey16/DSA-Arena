@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import JavaCodeExecutor from '../services/codeExecutor';
 import Question from '../models/Question';
 import Submission from '../models/Submission';
@@ -85,13 +86,17 @@ export const submitCode = async (req: Request, res: Response) => {
     // Update UserProgress if question is completed (Accepted)
     if (status === 'Accepted' && userId !== 'anonymous') {
       
+      // Convert userId string to ObjectId
+      const userObjectId = new mongoose.Types.ObjectId(userId);
+      console.log(`📊 Processing progress: userId=${userId} (ObjectId: ${userObjectId}), topicId=${topicId}`);
+      
       // Extract day number from topicId (e.g., 'day-1' -> 1 or just 1 -> 1)
       const topicIdStr = String(topicId);
       const dayId = topicIdStr.includes('day-') 
         ? parseInt(topicIdStr.replace('day-', '')) 
         : parseInt(topicIdStr);
       
-      console.log(`📊 Processing progress: topicId=${topicId}, dayId=${dayId}`);
+      console.log(`📊 DayId=${dayId}`);
       
       // Get all questions for this day to find the index of current question
       const allDayQuestions = await Question.find({ topicId: topicIdStr }).sort({ createdAt: 1 });
@@ -101,9 +106,11 @@ export const submitCode = async (req: Request, res: Response) => {
         console.error(`Question ${questionId} not found in topic ${topicId}`);
         // Still save submission but don't update progress
       } else {
+        console.log(`📊 Question index: ${questionIndex}`);
+        
         // Find or create user progress for this specific question
-        await UserProgress.findOneAndUpdate(
-          { userId, dayId, questionIndex },
+        const updatedProgress = await UserProgress.findOneAndUpdate(
+          { userId: userObjectId, dayId, questionIndex },
           { 
             completed: true,
             code,
@@ -114,10 +121,17 @@ export const submitCode = async (req: Request, res: Response) => {
           },
           { upsert: true, new: true }
         );
+        
+        console.log(`✅ Progress updated:`, {
+          userId: updatedProgress.userId,
+          dayId: updatedProgress.dayId,
+          questionIndex: updatedProgress.questionIndex,
+          completed: updatedProgress.completed
+        });
 
         // Check if user has completed minimum required questions for this day
         const completedCount = await UserProgress.countDocuments({
-          userId,
+          userId: userObjectId,
           dayId,
           completed: true
         });
@@ -126,6 +140,8 @@ export const submitCode = async (req: Request, res: Response) => {
         const currentDaySettings = await DaySettings.findOne({ dayId });
         const minRequired = currentDaySettings?.minQuestionsToUnlock || 3;
 
+        console.log(`📊 Completed ${completedCount}/${minRequired} required questions for Day ${dayId}`);
+
         // If user completed minimum required questions, unlock next day
         if (completedCount >= minRequired) {
           const nextDayId = dayId + 1;
@@ -133,9 +149,9 @@ export const submitCode = async (req: Request, res: Response) => {
           // Check if next day exists
           const nextDay = await DaySettings.findOne({ dayId: nextDayId });
           if (nextDay) {
-            // Update user's unlocked days
+            // Update user's unlocked days (userId is already ObjectId)
             await User.findByIdAndUpdate(
-              userId,
+              userObjectId,
               { $addToSet: { unlockedDays: nextDayId } }, // addToSet prevents duplicates
               { new: true }
             );
