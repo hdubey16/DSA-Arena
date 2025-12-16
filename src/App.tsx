@@ -11,6 +11,7 @@ import Topics from "./pages/Topics";
 import Practice from "./pages/Practice";
 import Tests from "./pages/Tests";
 import Profile from "./pages/Profile";
+import Leaderboard from "./pages/Leaderboard";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -88,6 +89,7 @@ const App = () => {
             <Route path="/practice/:topicId" element={<Practice />} />
             <Route path="/tests" element={<Tests />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
             
             {/* Admin Dashboard */}
             <Route

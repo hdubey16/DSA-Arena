@@ -141,6 +141,7 @@ export const userAPI = {
   getTests: () => api.get('/tests'),
   startTest: (testId: string) => api.post(`/tests/${testId}/start`),
   submitTest: (testId: string, data: any) => api.post(`/tests/${testId}/submit`, data),
+  getLeaderboard: () => api.get('/leaderboard'),
 };
 
 // Submission APIs

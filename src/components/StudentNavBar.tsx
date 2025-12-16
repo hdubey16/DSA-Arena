@@ -27,7 +27,7 @@ const StudentNavBar = () => {
   const tabs = [
     { title: "Home", icon: Home },
     { title: "Topics", icon: BookOpen },
-    { title: "Tests", icon: Trophy },
+    { title: "Leaderboard", icon: Trophy },
     { type: "separator" as const },
     { title: "Profile", icon: User },
   ];
@@ -35,7 +35,7 @@ const StudentNavBar = () => {
   const tabMapping = [
     "/",
     "/topics",
-    "/tests",
+    "/leaderboard",
     null, // separator
     "/profile",
   ];
