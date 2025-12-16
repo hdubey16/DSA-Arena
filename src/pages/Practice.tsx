@@ -327,7 +327,7 @@ const Practice = () => {
       <PanelGroup direction="horizontal" className="h-screen">
         {/* Left Panel - Problem Description */}
         <Panel defaultSize={50} minSize={30}>
-          <div className="h-full border-r border-border overflow-y-auto p-6">
+          <div className="h-full border-r border-border overflow-y-auto p-6 allow-copy">
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
               <Button variant="outline" size="sm" onClick={() => navigate("/topics")}>

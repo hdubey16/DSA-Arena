@@ -29,11 +29,21 @@ const App = () => {
   // Disable copy-paste globally
   React.useEffect(() => {
     const disableCopyPaste = (e: ClipboardEvent) => {
+      const target = e.target as HTMLElement;
+      // Allow copy if the element or its parent has the 'allow-copy' class
+      if (target.closest('.allow-copy')) {
+        return true;
+      }
       e.preventDefault();
       return false;
     };
 
     const disableContextMenu = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      // Allow context menu if the element or its parent has the 'allow-copy' class
+      if (target.closest('.allow-copy')) {
+        return true;
+      }
       e.preventDefault();
       return false;
     };
