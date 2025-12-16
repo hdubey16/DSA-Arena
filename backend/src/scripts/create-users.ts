@@ -16,12 +16,6 @@ const createUsers = async () => {
         email: 'himanshu@java.com',
         password: 'himumu',
         role: 'user'
-      },
-      {
-        name: 'Kritika Upadhya',
-        email: 'kritika@java.com',
-        password: 'krits',
-        role: 'user'
       }
     ];
 
