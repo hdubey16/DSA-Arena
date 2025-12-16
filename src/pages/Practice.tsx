@@ -54,13 +54,16 @@ const Practice = () => {
   const { topicId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   
   const dayNumber = parseInt(topicId || "1");
   const dayData = studyDays.find(d => d.day === dayNumber) || studyDays[0];
 
   // Check authentication
   useEffect(() => {
+    // Wait for auth to finish loading before checking
+    if (authLoading) return;
+    
     if (!isAuthenticated) {
       toast({
         title: "Login Required",
@@ -69,7 +72,7 @@ const Practice = () => {
       });
       navigate("/login");
     }
-  }, [isAuthenticated, navigate, toast]);
+  }, [isAuthenticated, authLoading, navigate, toast]);
 
   // Questions state
   const [questions, setQuestions] = useState(() => generatePracticeQuestions(dayData));

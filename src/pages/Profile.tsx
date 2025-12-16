@@ -23,11 +23,14 @@ import { toast } from "sonner";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [userData, setUserData] = useState<any>(null);
   const stats = getCompletionStats();
 
   useEffect(() => {
+    // Wait for auth to finish loading before checking
+    if (authLoading) return;
+    
     if (!isAuthenticated) {
       toast.error("Please login to view your profile");
       navigate("/login");
