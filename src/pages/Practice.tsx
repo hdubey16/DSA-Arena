@@ -508,7 +508,7 @@ const Practice = () => {
                 onChange={(value) => setCode(value || "")}
                 theme="vs-dark"
                 beforeMount={(monaco) => {
-                  // Add custom commands to block copy/paste before editor loads
+                  // Block copy/cut but allow paste
                   monaco.editor.addKeybindingRules([
                     {
                       keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyC,
@@ -517,24 +517,20 @@ const Practice = () => {
                     {
                       keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyX,
                       command: null,
-                    },
-                    {
-                      keybinding: monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyV,
-                      command: null,
                     }
                   ]);
                 }}
                 onMount={(editor, monaco) => {
-                  // Block keyboard events
+                  // Block copy/cut keyboard events but allow paste
                   editor.onKeyDown((e) => {
                     const ctrlOrCmd = e.ctrlKey || e.metaKey;
-                    if (ctrlOrCmd && (e.code === 'KeyC' || e.code === 'KeyX' || e.code === 'KeyV')) {
+                    if (ctrlOrCmd && (e.code === 'KeyC' || e.code === 'KeyX')) {
                       e.preventDefault();
                       e.stopPropagation();
                     }
                   });
                   
-                  // Block clipboard events on DOM
+                  // Block copy/cut clipboard events on DOM but allow paste
                   const editorDomNode = editor.getDomNode();
                   if (editorDomNode) {
                     const blockEvent = (e: Event) => {
@@ -544,12 +540,10 @@ const Practice = () => {
                       return false;
                     };
                     
-                    editorDomNode.addEventListener('paste', blockEvent, true);
                     editorDomNode.addEventListener('copy', blockEvent, true);
                     editorDomNode.addEventListener('cut', blockEvent, true);
                     editorDomNode.addEventListener('beforecopy', blockEvent, true);
                     editorDomNode.addEventListener('beforecut', blockEvent, true);
-                    editorDomNode.addEventListener('beforepaste', blockEvent, true);
                   }
                   
                   // Also block context menu actions
