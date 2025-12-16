@@ -1,16 +1,35 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Code2, Lock, CheckCircle2 } from "lucide-react";
+import { Code2, Lock, CheckCircle2, RefreshCw } from "lucide-react";
 import { studyDays } from "@/data/studyDays";
-import { getDayProgress, isDayUnlocked, getCompletionStats } from "@/utils/progressTracker";
+import { getDayProgress, isDayUnlocked, getCompletionStats, syncProgressFromBackend } from "@/utils/progressTracker";
 import StudentNavBar from "@/components/StudentNavBar";
 import { GlowCard } from "@/components/ui/spotlight-card";
 import { RetroGrid } from "@/components/ui/retro-grid";
+import { toast } from "sonner";
+import { useState } from "react";
 
 const Topics = () => {
   const navigate = useNavigate();
-  const stats = getCompletionStats();
+  const [stats, setStats] = useState(getCompletionStats());
+  const [syncing, setSyncing] = useState(false);
+
+  const handleSyncProgress = async () => {
+    setSyncing(true);
+    try {
+      console.log('[Topics] Manual sync triggered');
+      await syncProgressFromBackend();
+      setStats(getCompletionStats()); // Refresh stats
+      toast.success("Progress synced from backend!");
+    } catch (error) {
+      console.error('[Topics] Sync failed:', error);
+      toast.error("Failed to sync progress");
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   const getWeekColor = (week: number) => {
     const colors = [
@@ -56,6 +75,16 @@ const Topics = () => {
               <span className="text-muted-foreground">Completion:</span>
               <span className="font-bold text-primary">{stats.percentage}%</span>
             </div>
+            <Button 
+              onClick={handleSyncProgress} 
+              disabled={syncing}
+              variant="outline"
+              size="sm"
+              className="ml-4"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
+              Sync Progress
+            </Button>
           </div>
         </div>
 

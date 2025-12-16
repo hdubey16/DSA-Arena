@@ -58,8 +58,12 @@ export const getProgress = async (req: AuthRequest, res: Response) => {
       return res.status(401).json({ message: 'Unauthorized' });
     }
 
+    console.log('[getProgress] Fetching progress for user:', userId);
+
     // Get all user progress records
     const progressRecords = await UserProgress.find({ userId });
+    
+    console.log('[getProgress] Found', progressRecords.length, 'progress records');
     
     // Group by day
     const progressByDay: Record<number, any> = {};
@@ -83,12 +87,14 @@ export const getProgress = async (req: AuthRequest, res: Response) => {
       });
     });
 
+    console.log('[getProgress] Returning progress for', Object.keys(progressByDay).length, 'days');
+    
     res.json({
       success: true,
       progress: progressByDay
     });
   } catch (error: any) {
-    console.error('Error fetching progress:', error);
+    console.error('[getProgress] Error fetching progress:', error);
     res.status(500).json({ message: 'Error fetching progress', error: error.message });
   }
 };

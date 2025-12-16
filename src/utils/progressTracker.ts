@@ -171,28 +171,42 @@ export const getStreak = (): number => {
 // Sync progress from backend to localStorage
 export const syncProgressFromBackend = async () => {
   try {
+    console.log('[Progress Sync] Starting sync from backend...');
     const response = await userAPI.getProgress();
-    const backendProgress = response.data.progress;
+    console.log('[Progress Sync] API response:', response);
     
-    if (!backendProgress) return;
+    const backendProgress = response.data.progress;
+    console.log('[Progress Sync] Backend progress data:', backendProgress);
+    
+    if (!backendProgress || Object.keys(backendProgress).length === 0) {
+      console.log('[Progress Sync] No backend progress found');
+      return;
+    }
     
     // Convert backend format to localStorage format
     const localProgress: QuestionProgress[] = [];
     
     Object.values(backendProgress).forEach((dayData: any) => {
+      console.log('[Progress Sync] Processing day:', dayData.dayId, 'with', dayData.questions.length, 'questions');
       dayData.questions.forEach((q: any) => {
-        localProgress.push({
+        const progressItem = {
           dayId: dayData.dayId,
           questionIndex: q.questionIndex,
           completed: q.completed,
           code: q.code || '',
           timestamp: new Date(q.lastAttempt).getTime()
-        });
+        };
+        console.log('[Progress Sync] Adding progress item:', progressItem);
+        localProgress.push(progressItem);
       });
     });
     
+    console.log('[Progress Sync] Converted to local format:', localProgress.length, 'items');
+    
     // Merge with existing localStorage data (keep the most recent)
     const existingProgress = getProgress();
+    console.log('[Progress Sync] Existing localStorage progress:', existingProgress.length, 'items');
+    
     const mergedProgress = [...localProgress];
     
     existingProgress.forEach(existing => {
@@ -201,21 +215,24 @@ export const syncProgressFromBackend = async () => {
       );
       
       if (!backendMatch) {
+        console.log('[Progress Sync] Adding local-only item:', existing);
         mergedProgress.push(existing);
       } else if (existing.timestamp > backendMatch.timestamp) {
         // Local is newer, replace backend data
+        console.log('[Progress Sync] Local item is newer, keeping it:', existing);
         const index = mergedProgress.indexOf(backendMatch);
         mergedProgress[index] = existing;
       }
     });
     
+    console.log('[Progress Sync] Final merged progress:', mergedProgress);
     localStorage.setItem(PROGRESS_KEY, JSON.stringify(mergedProgress));
     localStorage.setItem(PROGRESS_SYNCED_KEY, new Date().toISOString());
     
-    console.log('Progress synced from backend:', mergedProgress.length, 'records');
+    console.log('[Progress Sync] ✅ Successfully synced', mergedProgress.length, 'records to localStorage');
     return mergedProgress;
   } catch (error) {
-    console.error('Failed to sync progress from backend:', error);
+    console.error('[Progress Sync] ❌ Failed to sync progress from backend:', error);
     return getProgress(); // Return local progress as fallback
   }
 };
