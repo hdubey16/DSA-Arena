@@ -245,10 +245,6 @@ const Practice = () => {
           description: "All test cases passed! Next question unlocked.",
         });
         saveQuestionProgress(dayNumber, currentQuestion, code, true);
-        // Reload to update completion status
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
       } else {
         toast({
           title: result.status,
