@@ -62,9 +62,15 @@ const Practice = () => {
   // Check authentication
   useEffect(() => {
     // Wait for auth to finish loading before checking
-    if (authLoading) return;
+    if (authLoading) {
+      console.log('[Practice] Auth is still loading, waiting...');
+      return;
+    }
+    
+    console.log('[Practice] Auth loaded. Authenticated:', isAuthenticated);
     
     if (!isAuthenticated) {
+      console.log('[Practice] Not authenticated, redirecting to login');
       toast({
         title: "Login Required",
         description: "Please login to solve practice questions.",
